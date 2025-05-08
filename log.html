@@ -1,0 +1,240 @@
+﻿<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>操作日志</title>
+    <!-- 引入 Chart.js 库 -->
+    <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
+    <style>
+        table {
+            width: 100%;
+            border-collapse: collapse;
+        }
+
+        th,
+        td {
+            border: 1px solid #ddd;
+            padding: 8px;
+            text-align: left;
+        }
+
+        /* 让图表容器可拖动调整大小 */
+        #chart-container {
+            resize: both;
+            overflow: auto;
+            border: 1px solid #ccc;
+            padding: 10px;
+            margin: 20px auto;
+            width: 800px;
+            /* 设置初始宽度 */
+            height: 400px;
+            /* 设置初始高度 */
+            max-width: 100%;
+            min-width: 300px;
+            min-height: 200px;
+        }
+
+        #toggle-table {
+            margin-bottom: 10px;
+        }
+
+        #table-container {
+            display: none;
+        }
+
+        canvas {
+            width: 100%;
+            height: 100%;
+        }
+    </style>
+</head>
+
+<body>
+    <h1>操作日志</h1>
+    <button id="toggle-table">展开/收起历史数据表格</button>
+    <div id="table-container">
+        <table id="log-table">
+            <thead>
+                <tr>
+                    <th>计算类型</th>
+                    <th>输入数据</th>
+                    <th>碳足迹</th>
+                </tr>
+            </thead>
+            <tbody></tbody>
+        </table>
+    </div>
+    <!-- 图表容器 -->
+    <div id="chart-container">
+        <!-- 绘制折线图的画布 -->
+        <canvas id="carbon-footprint-chart"></canvas>
+    </div>
+    <!-- 勾选框容器 -->
+    <div id="checkbox-container">
+        <label>
+            <input type="checkbox" id="personal-checkbox" checked> 个人碳足迹
+        </label>
+        <label>
+            <input type="checkbox" id="family-checkbox" checked> 家庭碳足迹
+        </label>
+        <label>
+            <input type="checkbox" id="enterprise-checkbox" checked> 企业碳足迹
+        </label>
+    </div>
+
+    <script>
+        // 从本地存储中获取操作日志
+        const logs = JSON.parse(localStorage.getItem('operationLogs')) || [];
+        const tableBody = document.querySelector('#log-table tbody');
+        const chartCanvas = document.getElementById('carbon-footprint-chart');
+        const ctx = chartCanvas.getContext('2d');
+        const toggleTableButton = document.getElementById('toggle-table');
+        const tableContainer = document.getElementById('table-container');
+        const personalCheckbox = document.getElementById('personal-checkbox');
+        const familyCheckbox = document.getElementById('family-checkbox');
+        const enterpriseCheckbox = document.getElementById('enterprise-checkbox');
+
+        // 按类别分类统计碳足迹数据，并限制每个类别数据数量为 10 个
+        const personalData = [];
+        const familyData = [];
+        const enterpriseData = [];
+
+        logs.forEach(log => {
+            const carbonFootprint = parseFloat(log.carbonFootprint);
+            switch (log.calculationType) {
+                case '个人':
+                    if (personalData.length < 10) {
+                        personalData.push(carbonFootprint);
+                    }
+                    break;
+                case '家庭':
+                    if (familyData.length < 10) {
+                        familyData.push(carbonFootprint);
+                    }
+                    break;
+                case '企业':
+                    if (enterpriseData.length < 10) {
+                        enterpriseData.push(carbonFootprint);
+                    }
+                    break;
+            }
+        });
+
+        // 渲染操作日志表格
+        logs.forEach(log => {
+            const row = document.createElement('tr');
+            const typeCell = document.createElement('td');
+            typeCell.textContent = log.calculationType;
+            const inputDataCell = document.createElement('td');
+            inputDataCell.textContent = JSON.stringify(log.inputData);
+            const carbonFootprintCell = document.createElement('td');
+            carbonFootprintCell.textContent = log.carbonFootprint;
+            row.appendChild(typeCell);
+            row.appendChild(inputDataCell);
+            row.appendChild(carbonFootprintCell);
+            tableBody.appendChild(row);
+        });
+
+        // 生成 X 轴标签
+        const labels = Array.from({ length: Math.max(personalData.length, familyData.length, enterpriseData.length) }, (_, i) => `记录 ${i + 1}`);
+
+        // 配置折线图数据
+        const data = {
+            labels: labels,
+            datasets: [
+                {
+                    label: '个人碳足迹',
+                    data: personalData,
+                    borderColor: 'rgb(75, 192, 192)',
+                    backgroundColor: 'rgba(75, 192, 192, 0.5)',
+                    fill: true,
+                    hidden: false
+                },
+                {
+                    label: '家庭碳足迹',
+                    data: familyData,
+                    borderColor: 'rgb(54, 162, 235)',
+                    backgroundColor: 'rgba(54, 162, 235, 0.5)',
+                    fill: true,
+                    hidden: false
+                },
+                {
+                    label: '企业碳足迹',
+                    data: enterpriseData,
+                    borderColor: 'rgb(255, 99, 132)',
+                    backgroundColor: 'rgba(255, 99, 132, 0.5)',
+                    fill: true,
+                    hidden: false
+                }
+            ]
+        };
+
+        // 配置折线图选项
+        const config = {
+            type: 'line',
+            data: data,
+            options: {
+                responsive: true,
+                maintainAspectRatio: false,
+                title: {
+                    display: true,
+                    text: '不同类型碳足迹历史数据折线图'
+                },
+                scales: {
+                    x: {
+                        title: {
+                            display: true,
+                            text: '记录序号'
+                        }
+                    },
+                    y: {
+                        title: {
+                            display: true,
+                            text: '碳足迹（千克二氧化碳当量）'
+                        }
+                    }
+                }
+            }
+        };
+
+        // 创建折线图
+        const myChart = new Chart(ctx, config);
+
+        // 切换表格显示状态
+        toggleTableButton.addEventListener('click', () => {
+            if (tableContainer.style.display === 'none') {
+                tableContainer.style.display = 'block';
+            } else {
+                tableContainer.style.display = 'none';
+            }
+        });
+
+        // 处理勾选框事件
+        function updateChartVisibility() {
+            const personalVisible = personalCheckbox.checked;
+            const familyVisible = familyCheckbox.checked;
+            const enterpriseVisible = enterpriseCheckbox.checked;
+
+            myChart.data.datasets[0].hidden = !personalVisible;
+            myChart.data.datasets[1].hidden = !familyVisible;
+            myChart.data.datasets[2].hidden = !enterpriseVisible;
+
+            myChart.update();
+        }
+
+        personalCheckbox.addEventListener('change', updateChartVisibility);
+        familyCheckbox.addEventListener('change', updateChartVisibility);
+        enterpriseCheckbox.addEventListener('change', updateChartVisibility);
+
+        // 监听容器大小变化，更新图表
+        const chartContainer = document.getElementById('chart-container');
+        const resizeObserver = new ResizeObserver(() => {
+            myChart.resize();
+        });
+        resizeObserver.observe(chartContainer);
+    </script>
+</body>
+
+</html>
