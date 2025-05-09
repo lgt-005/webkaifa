@@ -1,5 +1,6 @@
 ﻿<!DOCTYPE html>
 <html lang="en">
+<html lang="zh-CN">
 
 <head>
     <meta charset="UTF-8">
@@ -142,9 +143,44 @@
 
         /* 数据记录提示词的颜色*/
         .record-count {
-            color: white;
+            color: black;
             margin-left: 10px;
             /* 可以根据需要调整与按钮的间距 */
+        }
+
+        /* 包裹按钮和信息展示区的容器样式 */
+        .calculation-actions {
+            display: flex;
+            flex-wrap: wrap;
+            justify-content: space-between;
+            align-items: center;
+            margin-top: 10px;
+        }
+
+        /* 按钮样式，统一按钮外观和间距 */
+        .calculation-actions button {
+            background-color: #228B22;
+            color: white;
+            border: none;
+            border-radius: 5px;
+            padding: 10px 20px;
+            margin-bottom: 10px;
+            cursor: pointer;
+            transition: background-color 0.3s ease;
+        }
+
+        .calculation-actions button:hover {
+            background-color: #006400;
+        }
+
+        /* 信息展示区样式 */
+        .carbon-comparison-info {
+            background-color: rgba(255, 255, 255, 0.8);
+            padding: 10px;
+            border-radius: 5px;
+            font-size: 14px;
+            max-width: 50%;
+            /* 限制信息展示区最大宽度 */
         }
     </style>
 </head>
@@ -153,6 +189,7 @@
     <!-- 开始页面 -->
     <div id="start-page" class="start-page">
         <div class="top-right-buttons">
+            <button id="calculation-method-button">计算方式</button>
             <button id="about-us-button">关于我们</button>
             <button id="carbon-video-button">碳足迹科普视频</button>
         </div>
@@ -161,6 +198,53 @@
         <a href="log.html" target="_blank">
             <button id="log-button-start" class="hover:bg-green-700">操作日志</button>
         </a>
+        <!-- 左上角添加论坛入口 -->
+        <div class="absolute top-4 left-4">
+            <a href="https://tieba.baidu.com/f?kw=%E7%A2%B3%E8%B6%B3%E8%BF%B9%E8%AE%A1%E7%AE%97%E6%9C%BA%E8%AE%BA%E5%9D%9B%E4%BD%9C%E4%B8%9A%E7%89%88&ie=utf-8"
+                target="_blank">
+                <button
+                    class="bg-green-700 text-white px-4 py-2 rounded-lg hover:bg-green-800 transition-colors duration-300 flex items-center">
+                    <i class="fa-solid fa-comments mr-2"></i>碳足迹论坛
+                </button>
+            </a>
+        </div>
+    </div>
+    <!-- 计算方式模态框 -->
+    <div id="calculation-method-modal" class="modal">
+        <div class="modal-content">
+            <span class="close">&times;</span>
+            <h2>计算方式</h2>
+            <h3>个人碳足迹计算</h3>
+            <p>个人碳足迹主要涉及交通、能源使用、食物消费等方面。计算公式如下：</p>
+            <ul>
+                <li>交通 - 汽车：碳排放量（千克）= 行驶里程（公里）× 0.2</li>
+                <li>交通 - 公共交通：碳排放量（千克）= 乘坐里程（公里）× 0.1</li>
+                <li>能源使用 - 电力：碳排放量（千克）= 日均用电量（度）× 0.5</li>
+                <li>能源使用 - 燃气：碳排放量（千克）= 日均用气量（立方米）× 0.3</li>
+                <li>食物消费 - 肉类：碳排放量（千克）= 日均肉类消费量（千克）× 2</li>
+            </ul>
+            <p>个人总碳排放量为以上各项碳排放量之和。</p>
+            <h3>家庭碳足迹计算</h3>
+            <p>家庭碳足迹计算方法与个人类似，但考虑家庭整体情况。计算公式如下：</p>
+            <ul>
+                <li>交通 - 汽车：碳排放量（千克）= 行驶里程（公里）× 0.2</li>
+                <li>交通 - 公共交通：碳排放量（千克）= 乘坐里程（公里）× 0.1</li>
+                <li>能源使用 - 电力：碳排放量（千克）= 日均用电量（度）× 0.5</li>
+                <li>能源使用 - 燃气：碳排放量（千克）= 日均用气量（立方米）× 0.3</li>
+                <li>食物消费 - 肉类：碳排放量（千克）= 日均肉类消费量（千克）× 2</li>
+            </ul>
+            <p>家庭总碳排放量为以上各项碳排放量之和。</p>
+            <h3>企业碳足迹计算</h3>
+            <p>企业碳足迹计算涉及生产过程、能源消耗、原材料采购、产品运输等多个环节。计算公式如下：</p>
+            <ul>
+                <li>交通 - 汽车：碳排放量（千克）= 行驶里程（公里）× 0.2</li>
+                <li>交通 - 公共交通：碳排放量（千克）= 乘坐里程（公里）× 0.1</li>
+                <li>能源使用 - 电力：碳排放量（千克）= 日均用电量（度）× 0.5</li>
+                <li>能源使用 - 燃气：碳排放量（千克）= 日均用气量（立方米）× 0.3</li>
+                <li>生产过程：碳排放量（千克）= 日均生产量（单位）× 0.1</li>
+            </ul>
+            <p>企业总碳排放量为以上各项碳排放量之和。</p>
+        </div>
     </div>
 
     <!-- 关于我们模态框 -->
@@ -185,7 +269,6 @@
             <h2>碳足迹科普视频</h2>
             <iframe id="carbon-video" src="https://player.bilibili.com/player.html?bvid=BV1HPSqYzEmG&page=1"
                 frameborder="0" allowfullscreen></iframe>
-            </video>
         </div>
     </div>
 
@@ -218,6 +301,15 @@
                 <label for="personal-meat-consumption" class="block mb-1">每周肉类消费量（千克）:</label>
                 <input type="number" id="personal-meat-consumption"
                     class="border border-gray-300 p-2 w-full rounded-md">
+                <div class="calculation-actions">
+                    <button id="calculate-button-personal" class="bg-green-500 text-white p-2 rounded-md">计算碳足迹</button>
+                    <button id="personal-clear-button" class="bg-green-500 text-white p-2 rounded-md">清除历史数据</button>
+                    <span id="personal-record-count" class="record-count">当前记录数: 0/10</span>
+                    <div class="carbon-comparison-info">
+                        <p>国内个人日均碳足迹排放量: 约 21.92 千克二氧化碳当量</p>
+                        <p>全球个人日均碳足迹排放量: 约 18.63 千克二氧化碳当量</p>
+                    </div>
+                </div>
             </div>
 
             <!-- 家庭碳足迹计算表单 -->
@@ -237,6 +329,15 @@
                 <h3 class="text-xl font-bold mb-2 mt-4">家庭食物</h3>
                 <label for="family-meat-consumption" class="block mb-1">家庭每周肉类消费量（千克）:</label>
                 <input type="number" id="family-meat-consumption" class="border border-gray-300 p-2 w-full rounded-md">
+                <div class="calculation-actions">
+                    <button id="calculate-button-family" class="bg-green-500 text-white p-2 rounded-md">计算碳足迹</button>
+                    <button id="family-clear-button" class="bg-green-500 text-white p-2 rounded-md">清除历史数据</button>
+                    <span id="family-record-count" class="record-count">当前记录数: 0/10</span>
+                    <div class="carbon-comparison-info">
+                        <p>国内四口之家日均碳足迹排放量: 约 46.93 千克二氧化碳当量</p>
+                        <p>全球四口之家日均碳足迹排放量: 约 32.33 千克二氧化碳当量</p>
+                    </div>
+                </div>
             </div>
 
             <!-- 企业碳足迹计算表单 -->
@@ -257,31 +358,17 @@
                 <h3 class="text-xl font-bold mb-2 mt-4">企业生产</h3>
                 <label for="enterprise-production" class="block mb-1">企业每月生产量（单位）:</label>
                 <input type="number" id="enterprise-production" class="border border-gray-300 p-2 w-full rounded-md">
+                <div class="calculation-actions">
+                    <button id="calculate-button-enterprise"
+                        class="bg-green-500 text-white p-2 rounded-md">计算碳足迹</button>
+                    <button id="enterprise-clear-button" class="bg-green-500 text-white p-2 rounded-md">清除历史数据</button>
+                    <span id="enterprise-record-count" class="record-count">当前记录数: 0/10</span>
+                    <div class="carbon-comparison-info">
+                        <p>国内企业日均碳足迹排放量: 因行业而异</p>
+                        <p>全球企业日均碳足迹排放量: 因行业而异</p>
+                    </div>
+                </div>
             </div>
-
-            <!-- 计算按钮 -->
-            <button id="calculate-button" class="bg-green-500 text-white p-2 rounded-md mt-4">计算碳足迹</button>
-        </div>
-        <!-- 个人碳足迹计算表单 -->
-        <div id="personal" class="calculation-type">
-            <!-- 表单内容 -->
-            <span id="personal-record-count" class="record-count">当前记录数: 0/10</span>
-            <button id="personal-clear-button" class="bg-green-500 text-white p-2 rounded-md mt-4 ml-2">清除历史数据</button>
-        </div>
-
-        <!-- 家庭碳足迹计算表单 -->
-        <div id="family" class="calculation-type hidden">
-            <!-- 表单内容 -->
-            <span id="family-record-count" class="record-count">当前记录数: 0/10</span>
-            <button id="family-clear-button" class="bg-green-500 text-white p-2 rounded-md mt-4 ml-2">清除历史数据</button>
-        </div>
-
-        <!-- 企业碳足迹计算表单 -->
-        <div id="enterprise" class="calculation-type hidden">
-            <!-- 表单内容 -->
-            <span id="enterprise-record-count" class="record-count">当前记录数: 0/10</span>
-            <button id="enterprise-clear-button"
-                class="bg-green-500 text-white p-2 rounded-md mt-4 ml-2">清除历史数据</button>
         </div>
         <!-- 结果显示 -->
         <div id="result" class="mt-6 bg-white p-6 rounded-lg shadow-md hidden">
@@ -296,34 +383,56 @@
         const startPage = document.getElementById('start-page');
         const mainContent = document.getElementById('main-content');
         const calculateButtonStart = document.getElementById('calculate-button-start');
-        const calculateButton = document.getElementById('calculate-button');
-        const resultDiv = document.getElementById('result');
-        const carbonFootprintValue = document.getElementById('carbon-footprint-value');
-        const feedbackMessage = document.getElementById('feedback-message');
         const backButton = document.getElementById('back-button');
         const typeButtons = document.querySelectorAll('.type-button');
         const calculationTypes = document.querySelectorAll('.calculation-type');
         const aboutUsButton = document.getElementById('about-us-button');
         const carbonVideoButton = document.getElementById('carbon-video-button');
+        const calculationMethodButton = document.getElementById('calculation-method-button');
         const aboutUsModal = document.getElementById('about-us-modal');
         const carbonVideoModal = document.getElementById('carbon-video-modal');
+        const calculationMethodModal = document.getElementById('calculation-method-modal');
         const closeAboutUsModal = aboutUsModal.querySelector('.close');
         const closeCarbonVideoModal = carbonVideoModal.querySelector('.close');
+        const closeCalculationMethodModal = calculationMethodModal.querySelector('.close');
         const carbonVideo = document.getElementById('carbon-video');
+        const calculateButtonPersonal = document.getElementById('calculate-button-personal');
+        const calculateButtonFamily = document.getElementById('calculate-button-family');
+        const calculateButtonEnterprise = document.getElementById('calculate-button-enterprise');
+        const resultDiv = document.getElementById('result');
+        const carbonFootprintValue = document.getElementById('carbon-footprint-value');
+        const feedbackMessage = document.getElementById('feedback-message');
+        const personalClearButton = document.getElementById('personal-clear-button');
+        const familyClearButton = document.getElementById('family-clear-button');
+        const enterpriseClearButton = document.getElementById('enterprise-clear-button');
+        const personalRecordCount = document.getElementById('personal-record-count');
+        const familyRecordCount = document.getElementById('family-record-count');
+        const enterpriseRecordCount = document.getElementById('enterprise-record-count');
 
-        // 开始页面按钮点击事件
+        // 页面加载时更新记录数量显示
+        function updateRecordCounts() {
+            const logs = JSON.parse(localStorage.getItem('operationLogs')) || [];
+            const personalLogs = logs.filter(log => log.calculationType === '个人');
+            const familyLogs = logs.filter(log => log.calculationType === '家庭');
+            const enterpriseLogs = logs.filter(log => log.calculationType === '企业');
+
+            personalRecordCount.textContent = `当前记录数: ${personalLogs.length}/10`;
+            familyRecordCount.textContent = `当前记录数: ${familyLogs.length}/10`;
+            enterpriseRecordCount.textContent = `当前记录数: ${enterpriseLogs.length}/10`;
+        }
+
+        updateRecordCounts();
+
         calculateButtonStart.addEventListener('click', () => {
             startPage.style.display = 'none';
-            mainContent.classList.remove('hidden');
+            mainContent.style.display = 'block';
         });
 
-        // 返回按钮点击事件
         backButton.addEventListener('click', () => {
-            mainContent.classList.add('hidden');
+            mainContent.style.display = 'none';
             startPage.style.display = 'flex';
         });
 
-        // 切换计算类型按钮点击事件
         typeButtons.forEach(button => {
             button.addEventListener('click', () => {
                 const type = button.dataset.type;
@@ -336,51 +445,24 @@
                 });
             });
         });
-        // 页面加载时更新记录数量显示
-        window.addEventListener('load', () => {
-            let logs = JSON.parse(localStorage.getItem('operationLogs')) || [];
-            const personalLogs = logs.filter(log => log.calculationType === '个人');
-            const familyLogs = logs.filter(log => log.calculationType === '家庭');
-            const enterpriseLogs = logs.filter(log => log.calculationType === '企业');
 
-            document.getElementById('personal-record-count').textContent = `当前记录数: ${personalLogs.length}/10`;
-            document.getElementById('family-record-count').textContent = `当前记录数: ${familyLogs.length}/10`;
-            document.getElementById('enterprise-record-count').textContent = `当前记录数: ${enterpriseLogs.length}/10`;
-        });
-        // 获取所有清除按钮
-        const personalClearButton = document.getElementById('personal-clear-button');
-        const familyClearButton = document.getElementById('family-clear-button');
-        const enterpriseClearButton = document.getElementById('enterprise-clear-button');
-
-        // 为个人清除按钮添加点击事件监听器
-        personalClearButton.addEventListener('click', () => {
-            let logs = JSON.parse(localStorage.getItem('operationLogs')) || [];
-            const nonPersonalLogs = logs.filter(log => log.calculationType !== '个人');
-            localStorage.setItem('operationLogs', JSON.stringify(nonPersonalLogs));
-            document.getElementById('personal-record-count').textContent = `当前记录数: 0/10`;
-        });
-
-        // 为家庭清除按钮添加点击事件监听器
-        familyClearButton.addEventListener('click', () => {
-            let logs = JSON.parse(localStorage.getItem('operationLogs')) || [];
-            const nonFamilyLogs = logs.filter(log => log.calculationType !== '家庭');
-            localStorage.setItem('operationLogs', JSON.stringify(nonFamilyLogs));
-            document.getElementById('family-record-count').textContent = `当前记录数: 0/10`;
-        });
-        calculateButton.addEventListener('click', () => {
+        function calculateCarbonFootprint(calculationType) {
             let totalCarbonFootprint = 0;
-            let calculationType = '';
             let inputData = {};
 
-            if (!document.getElementById('personal').classList.contains('hidden')) {
-                calculationType = '个人';
+            if (calculationType === '个人') {
                 const carDistance = parseFloat(document.getElementById('personal-car-distance').value) || 0;
                 const publicTransportDistance = parseFloat(document.getElementById('personal-public-transport-distance').value) || 0;
                 const electricityUsage = parseFloat(document.getElementById('personal-electricity-usage').value) || 0;
                 const gasUsage = parseFloat(document.getElementById('personal-gas-usage').value) || 0;
                 const meatConsumption = parseFloat(document.getElementById('personal-meat-consumption').value) || 0;
 
-                totalCarbonFootprint = carDistance * 0.2 + publicTransportDistance * 0.1 + electricityUsage * 0.5 + gasUsage * 0.3 + meatConsumption * 2;
+                // 换算成日均数据
+                const dailyElectricity = electricityUsage / 30;
+                const dailyGas = gasUsage / 30;
+                const dailyMeat = meatConsumption / 7;
+
+                totalCarbonFootprint = carDistance * 0.2 + publicTransportDistance * 0.1 + dailyElectricity * 0.5 + dailyGas * 0.3 + dailyMeat * 2;
                 inputData = {
                     carDistance,
                     publicTransportDistance,
@@ -388,15 +470,19 @@
                     gasUsage,
                     meatConsumption
                 };
-            } else if (!document.getElementById('family').classList.contains('hidden')) {
-                calculationType = '家庭';
+            } else if (calculationType === '家庭') {
                 const carDistance = parseFloat(document.getElementById('family-car-distance').value) || 0;
                 const publicTransportDistance = parseFloat(document.getElementById('family-public-transport-distance').value) || 0;
                 const electricityUsage = parseFloat(document.getElementById('family-electricity-usage').value) || 0;
                 const gasUsage = parseFloat(document.getElementById('family-gas-usage').value) || 0;
                 const meatConsumption = parseFloat(document.getElementById('family-meat-consumption').value) || 0;
 
-                totalCarbonFootprint = carDistance * 0.2 + publicTransportDistance * 0.1 + electricityUsage * 0.5 + gasUsage * 0.3 + meatConsumption * 2;
+                // 换算成日均数据
+                const dailyElectricity = electricityUsage / 30;
+                const dailyGas = gasUsage / 30;
+                const dailyMeat = meatConsumption / 7;
+
+                totalCarbonFootprint = carDistance * 0.2 + publicTransportDistance * 0.1 + dailyElectricity * 0.5 + dailyGas * 0.3 + dailyMeat * 2;
                 inputData = {
                     carDistance,
                     publicTransportDistance,
@@ -404,15 +490,19 @@
                     gasUsage,
                     meatConsumption
                 };
-            } else if (!document.getElementById('enterprise').classList.contains('hidden')) {
-                calculationType = '企业';
+            } else if (calculationType === '企业') {
                 const carDistance = parseFloat(document.getElementById('enterprise-car-distance').value) || 0;
                 const publicTransportDistance = parseFloat(document.getElementById('enterprise-public-transport-distance').value) || 0;
                 const electricityUsage = parseFloat(document.getElementById('enterprise-electricity-usage').value) || 0;
                 const gasUsage = parseFloat(document.getElementById('enterprise-gas-usage').value) || 0;
                 const production = parseFloat(document.getElementById('enterprise-production').value) || 0;
 
-                totalCarbonFootprint = carDistance * 0.2 + publicTransportDistance * 0.1 + electricityUsage * 0.5 + gasUsage * 0.3 + production * 0.1;
+                // 换算成日均数据
+                const dailyElectricity = electricityUsage / 30;
+                const dailyGas = gasUsage / 30;
+                const dailyProduction = production / 30;
+
+                totalCarbonFootprint = carDistance * 0.2 + publicTransportDistance * 0.1 + dailyElectricity * 0.5 + dailyGas * 0.3 + dailyProduction * 0.1;
                 inputData = {
                     carDistance,
                     publicTransportDistance,
@@ -423,23 +513,25 @@
             }
 
             resultDiv.classList.remove('hidden');
-            carbonFootprintValue.textContent = `你的 ${calculationType} 碳足迹为: ${totalCarbonFootprint.toFixed(2)} 千克二氧化碳当量`;
+            carbonFootprintValue.textContent = `你的 ${calculationType} 日均碳排放量为: ${totalCarbonFootprint.toFixed(2)} 千克二氧化碳当量`;
 
             let feedback = '';
             if (totalCarbonFootprint < 100) {
-                feedback = `${calculationType} 碳足迹处于较低水平，继续保持！可以考虑进一步减少碳排放。`;
+                feedback = `${calculationType} 日均碳排放量处于较低水平，继续保持！可以考虑进一步减少碳排放。`;
             } else if (totalCarbonFootprint < 200) {
-                feedback = `${calculationType} 碳足迹处于中等水平。建议你采取措施减少碳排放。`;
+                feedback = `${calculationType} 日均碳排放量处于中等水平。建议你采取措施减少碳排放。`;
             } else {
-                feedback = `${calculationType} 碳足迹较高，需要大力采取措施减少碳排放。`;
+                feedback = `${calculationType} 日均碳排放量较高，需要大力采取措施减少碳排放。`;
             }
             feedbackMessage.textContent = feedback;
+            const timestamp = new Date().toLocaleString();
 
             // 记录操作日志到本地存储
             const logEntry = {
                 calculationType,
                 inputData,
-                carbonFootprint: totalCarbonFootprint.toFixed(2)
+                carbonFootprint: totalCarbonFootprint.toFixed(2),
+                timestamp: timestamp
             };
             let logs = JSON.parse(localStorage.getItem('operationLogs')) || [];
 
@@ -466,9 +558,19 @@
 
             localStorage.setItem('operationLogs', JSON.stringify(updatedLogs));
             // 更新对应类型的记录数量显示
-            document.getElementById('personal-record-count').textContent = `当前记录数: ${updatedPersonalLogs.length}/10`;
-            document.getElementById('family-record-count').textContent = `当前记录数: ${updatedFamilyLogs.length}/10`;
-            document.getElementById('enterprise-record-count').textContent = `当前记录数: ${updatedEnterpriseLogs.length}/10`;
+            updateRecordCounts();
+        }
+
+        calculateButtonPersonal.addEventListener('click', () => {
+            calculateCarbonFootprint('个人');
+        });
+
+        calculateButtonFamily.addEventListener('click', () => {
+            calculateCarbonFootprint('家庭');
+        });
+
+        calculateButtonEnterprise.addEventListener('click', () => {
+            calculateCarbonFootprint('企业');
         });
 
         // 关于我们按钮点击事件
@@ -480,6 +582,11 @@
         carbonVideoButton.addEventListener('click', () => {
             carbonVideoModal.style.display = 'block';
             carbonVideo.play();
+        });
+
+        // 计算方式按钮点击事件
+        calculationMethodButton.addEventListener('click', () => {
+            calculationMethodModal.style.display = 'block';
         });
 
         // 关闭关于我们模态框
@@ -494,6 +601,11 @@
             carbonVideo.currentTime = 0;
         });
 
+        // 关闭计算方式模态框
+        closeCalculationMethodModal.addEventListener('click', () => {
+            calculationMethodModal.style.display = 'none';
+        });
+
         window.addEventListener('click', (event) => {
             if (event.target == aboutUsModal) {
                 aboutUsModal.style.display = 'none';
@@ -503,7 +615,35 @@
                 carbonVideo.pause();
                 carbonVideo.currentTime = 0;
             }
+            if (event.target == calculationMethodModal) {
+                calculationMethodModal.style.display = 'none';
+            }
         });
+
+        // 为个人清除按钮添加点击事件监听器
+        personalClearButton.addEventListener('click', () => {
+            let logs = JSON.parse(localStorage.getItem('operationLogs')) || [];
+            const nonPersonalLogs = logs.filter(log => log.calculationType !== '个人');
+            localStorage.setItem('operationLogs', JSON.stringify(nonPersonalLogs));
+            updateRecordCounts();
+        });
+
+        // 为家庭清除按钮添加点击事件监听器
+        familyClearButton.addEventListener('click', () => {
+            let logs = JSON.parse(localStorage.getItem('operationLogs')) || [];
+            const nonFamilyLogs = logs.filter(log => log.calculationType !== '家庭');
+            localStorage.setItem('operationLogs', JSON.stringify(nonFamilyLogs));
+            updateRecordCounts();
+        });
+
+        // 为企业清除按钮添加点击事件监听器
+        enterpriseClearButton.addEventListener('click', () => {
+            let logs = JSON.parse(localStorage.getItem('operationLogs')) || [];
+            const nonEnterpriseLogs = logs.filter(log => log.calculationType !== '企业');
+            localStorage.setItem('operationLogs', JSON.stringify(nonEnterpriseLogs));
+            updateRecordCounts();
+        });
+
     </script>
 </body>
 

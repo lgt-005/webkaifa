@@ -1,5 +1,5 @@
-﻿<!DOCTYPE html>
-<html lang="en">
+﻿﻿<!DOCTYPE html>
+<html lang="zh-CN">
 
 <head>
     <meta charset="UTF-8">
@@ -48,17 +48,41 @@
             width: 100%;
             height: 100%;
         }
+        
+        button {
+            padding: 8px 16px;
+            margin: 5px;
+            background-color: #4CAF50;
+            color: white;
+            border: none;
+            border-radius: 4px;
+            cursor: pointer;
+        }
+        
+        button:hover {
+            background-color: #45a049;
+        }
+        
+        #clear-all-logs {
+            background-color: #f44336;
+        }
+        
+        #clear-all-logs:hover {
+            background-color: #d32f2f;
+        }
     </style>
 </head>
 
 <body>
     <h1>操作日志</h1>
     <button id="toggle-table">展开/收起历史数据表格</button>
+    <button id="clear-all-logs">清除所有历史记录</button>
     <div id="table-container">
         <table id="log-table">
             <thead>
                 <tr>
                     <th>计算类型</th>
+                    <th>计算时间</th>
                     <th>输入数据</th>
                     <th>碳足迹</th>
                 </tr>
@@ -95,50 +119,75 @@
         const personalCheckbox = document.getElementById('personal-checkbox');
         const familyCheckbox = document.getElementById('family-checkbox');
         const enterpriseCheckbox = document.getElementById('enterprise-checkbox');
+        const clearAllLogsButton = document.getElementById('clear-all-logs');
 
-        // 按类别分类统计碳足迹数据，并限制每个类别数据数量为 10 个
+        // 按类别分类统计碳足迹数据
         const personalData = [];
         const familyData = [];
         const enterpriseData = [];
+        const personalTimestamps = [];
+        const familyTimestamps = [];
+        const enterpriseTimestamps = [];
 
-        logs.forEach(log => {
-            const carbonFootprint = parseFloat(log.carbonFootprint);
-            switch (log.calculationType) {
-                case '个人':
-                    if (personalData.length < 10) {
-                        personalData.push(carbonFootprint);
-                    }
-                    break;
-                case '家庭':
-                    if (familyData.length < 10) {
-                        familyData.push(carbonFootprint);
-                    }
-                    break;
-                case '企业':
-                    if (enterpriseData.length < 10) {
-                        enterpriseData.push(carbonFootprint);
-                    }
-                    break;
-            }
+        // 分别收集各类别的最新10条记录
+        const personalLogs = logs.filter(log => log.calculationType === '个人').slice(-10);
+        const familyLogs = logs.filter(log => log.calculationType === '家庭').slice(-10);
+        const enterpriseLogs = logs.filter(log => log.calculationType === '企业').slice(-10);
+
+        // 处理个人日志
+        personalLogs.forEach(log => {
+            personalData.push(parseFloat(log.carbonFootprint));
+            personalTimestamps.push(log.timestamp || `记录 ${personalData.length}`);
+        });
+
+        // 处理家庭日志
+        familyLogs.forEach(log => {
+            familyData.push(parseFloat(log.carbonFootprint));
+            familyTimestamps.push(log.timestamp || `记录 ${familyData.length}`);
+        });
+
+        // 处理企业日志
+        enterpriseLogs.forEach(log => {
+            enterpriseData.push(parseFloat(log.carbonFootprint));
+            enterpriseTimestamps.push(log.timestamp || `记录 ${enterpriseData.length}`);
         });
 
         // 渲染操作日志表格
         logs.forEach(log => {
             const row = document.createElement('tr');
+            
             const typeCell = document.createElement('td');
             typeCell.textContent = log.calculationType;
+            
+            const timestampCell = document.createElement('td');
+            timestampCell.textContent = log.timestamp || '未知时间';
+            
             const inputDataCell = document.createElement('td');
-            inputDataCell.textContent = JSON.stringify(log.inputData);
+            // 美化输入数据显示
+            try {
+                const formattedData = JSON.stringify(log.inputData, null, 2);
+                inputDataCell.textContent = formattedData;
+            } catch (e) {
+                inputDataCell.textContent = JSON.stringify(log.inputData);
+            }
+            
             const carbonFootprintCell = document.createElement('td');
             carbonFootprintCell.textContent = log.carbonFootprint;
+            
             row.appendChild(typeCell);
+            row.appendChild(timestampCell);
             row.appendChild(inputDataCell);
             row.appendChild(carbonFootprintCell);
             tableBody.appendChild(row);
         });
 
-        // 生成 X 轴标签
-        const labels = Array.from({ length: Math.max(personalData.length, familyData.length, enterpriseData.length) }, (_, i) => `记录 ${i + 1}`);
+        // 找出所有时间戳并去重排序
+        const allTimestamps = [...personalTimestamps, ...familyTimestamps, ...enterpriseTimestamps]
+            .filter((v, i, a) => a.indexOf(v) === i)
+            .sort();
+
+        // 生成 X 轴标签（使用时间戳）
+        const labels = allTimestamps.length > 0 ? allTimestamps : ['无数据'];
 
         // 配置折线图数据
         const data = {
@@ -146,7 +195,10 @@
             datasets: [
                 {
                     label: '个人碳足迹',
-                    data: personalData,
+                    data: personalTimestamps.map(timestamp => {
+                        const index = personalTimestamps.indexOf(timestamp);
+                        return index !== -1 ? personalData[index] : null;
+                    }),
                     borderColor: 'rgb(75, 192, 192)',
                     backgroundColor: 'rgba(75, 192, 192, 0.5)',
                     fill: true,
@@ -154,7 +206,10 @@
                 },
                 {
                     label: '家庭碳足迹',
-                    data: familyData,
+                    data: familyTimestamps.map(timestamp => {
+                        const index = familyTimestamps.indexOf(timestamp);
+                        return index !== -1 ? familyData[index] : null;
+                    }),
                     borderColor: 'rgb(54, 162, 235)',
                     backgroundColor: 'rgba(54, 162, 235, 0.5)',
                     fill: true,
@@ -162,7 +217,10 @@
                 },
                 {
                     label: '企业碳足迹',
-                    data: enterpriseData,
+                    data: enterpriseTimestamps.map(timestamp => {
+                        const index = enterpriseTimestamps.indexOf(timestamp);
+                        return index !== -1 ? enterpriseData[index] : null;
+                    }),
                     borderColor: 'rgb(255, 99, 132)',
                     backgroundColor: 'rgba(255, 99, 132, 0.5)',
                     fill: true,
@@ -180,13 +238,18 @@
                 maintainAspectRatio: false,
                 title: {
                     display: true,
-                    text: '不同类型碳足迹历史数据折线图'
+                    text: '不同类型碳足迹历史数据趋势图'
                 },
                 scales: {
                     x: {
                         title: {
                             display: true,
-                            text: '记录序号'
+                            text: '计算时间'
+                        },
+                        ticks: {
+                            autoSkip: true,
+                            maxRotation: 45,
+                            minRotation: 45
                         }
                     },
                     y: {
@@ -194,6 +257,15 @@
                             display: true,
                             text: '碳足迹（千克二氧化碳当量）'
                         }
+                    }
+                },
+                plugins: {
+                    tooltip: {
+                        mode: 'index',
+                        intersect: false
+                    },
+                    legend: {
+                        position: 'top',
                     }
                 }
             }
@@ -234,6 +306,22 @@
             myChart.resize();
         });
         resizeObserver.observe(chartContainer);
+
+        // 清除所有历史记录
+        clearAllLogsButton.addEventListener('click', () => {
+            if (confirm('确定要清除所有历史记录吗？此操作不可恢复。')) {
+                localStorage.removeItem('operationLogs');
+                alert('所有历史记录已清除');
+                // 清空表格
+                tableBody.innerHTML = '';
+                // 清空图表数据
+                myChart.data.datasets.forEach(dataset => {
+                    dataset.data = [];
+                });
+                myChart.data.labels = ['无数据'];
+                myChart.update();
+            }
+        });
     </script>
 </body>
 
