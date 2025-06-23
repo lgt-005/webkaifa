@@ -1,0 +1,397 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>碳足迹计算机</title>
+    <script src="https://cdn.tailwindcss.com"></script>
+    <link href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.7.2/css/all.min.css" rel="stylesheet">
+    <link rel="stylesheet" href="css/style.css">
+</head>
+
+<body class="font-sans">
+    <!-- 开始页面 -->
+    <div id="start-page" class="start-page">
+        <div class="menu-bar">
+            <!-- 左上角LOGO -->
+            <img src="./assets/Logo.jpg" alt="碳足迹LOGO" class="logo">
+
+            <a href="https://tieba.baidu.com/f?kw=%E7%A2%B3%E8%B6%B3%E8%BF%B9%E8%AE%A1%E7%AE%97%E6%9C%BA%E8%AE%BA%E5%9D%9B%E4%BD%9C%E4%B8%9A%E7%89%88&ie=utf-8"
+                target="_blank" rel="noopener noreferrer">
+                <button
+                    class="bg-green-700 text-white px-4 py-2 rounded-lg hover:bg-green-800 transition-colors duration-300 flex items-center">
+                    <i class="fa-solid fa-comments mr-2"></i>碳足迹论坛
+                </button>
+            </a>
+
+            <button id="calculation-method-button">计算方式</button>
+            <button id="about-us-button">关于我们</button>
+            <div class="dropdown">
+                <button id="carbon-consultation-button">碳足迹咨询</button>
+                <div class="dropdown-content">
+                    <a href="#" id="carbon-video-button">碳足迹科普视频</a>
+                    <a href="https://baike.baidu.com/item/%E7%A2%B3%E8%B6%B3%E8%BF%B9/9201754" id="carbon-agent-button"
+                        target="_blank"
+                        rel="noopener noreferrer"> <!-- 安全属性 -->
+                        碳足迹科普文章
+                    </a>
+                </div>
+            </div>
+        </div>
+
+        <!-- <button id="calculate-button-start" class="hover:bg-green-700">碳足迹计算</button> -->
+        <!-- <a href="log.html" target="_blank"> -->
+        <!-- <button id="log-button-start" class="hover:bg-green-700">操作日志</button> -->
+        <!-- </a> -->
+        <h1 class="text-4xl font-bold text-white mb-8">碳足迹计算机</h1>
+        <button id="calculate-button-start"
+            class="bg-green-600 hover:bg-green-700 text-white font-bold py-3 px-8 rounded-lg transition-all duration-300 transform hover:scale-105">碳足迹计算</button>
+        <a href="log.html" target="_blank">
+            <button id="log-button-start"
+                class="bg-green-600 hover:bg-green-700 text-white font-bold py-3 px-8 rounded-lg transition-all duration-300 transform hover:scale-105 mt-4">操作日志</button>
+        </a>
+        <!-- <div class="absolute top-4 left-4"> -->
+        <!-- <a href="https://tieba.baidu.com/f?kw=%E7%A2%B3%E8%B6%B3%E8%BF%B9%E8%AE%A1%E7%AE%97%E6%9C%BA%E8%AE%BA%E5%9D%9B%E4%BD%9C%E4%B8%9A%E7%89%88&ie=utf-8" -->
+        <!-- target="_blank"> -->
+        <!-- <button -->
+        <!-- class="bg-green-700 text-white px-4 py-2 rounded-lg hover:bg-green-800 transition-colors duration-300 flex items-center"> -->
+        <!-- <i class="fa-solid fa-comments mr-2"></i>碳足迹论坛 -->
+        <!-- </button> -->
+        <!-- </a> -->
+    </div>
+    </div>
+
+    <!-- 计算方式模态框 -->
+    <div id="calculation-method-modal" class="modal">
+        <div class="modal-content">
+            <span class="close">&times;</span>
+            <h2>计算方式</h2>
+            <h3>个人碳足迹计算</h3>
+            <p>个人碳足迹主要涉及交通、能源使用、食物消费等方面。计算公式如下：</p>
+            <ul>
+                <li>交通 - 汽车：碳排放量（千克）= 行驶里程（公里）× 0.2</li>
+                <li>交通 - 公共交通：碳排放量（千克）= 乘坐里程（公里）× 0.1</li>
+                <li>能源使用 - 电力：碳排放量（千克）= 日均用电量（度）× 0.5</li>
+                <li>能源使用 - 燃气：碳排放量（千克）= 日均用气量（立方米）× 0.3</li>
+                <li>食物消费 - 肉类：碳排放量（千克）= 日均肉类消费量（千克）× 2</li>
+            </ul>
+            <p>个人总碳排放量为以上各项碳排放量之和。</p>
+            <h3>家庭碳足迹计算</h3>
+            <p>家庭碳足迹计算方法与个人类似，但考虑家庭整体情况。计算公式如下：</p>
+            <ul>
+                <li>交通 - 汽车：碳排放量（千克）= 行驶里程（公里）× 0.2</li>
+                <li>交通 - 公共交通：碳排放量（千克）= 乘坐里程（公里）× 0.1</li>
+                <li>能源使用 - 电力：碳排放量（千克）= 日均用电量（度）× 0.5</li>
+                <li>能源使用 - 燃气：碳排放量（千克）= 日均用气量（立方米）× 0.3</li>
+                <li>食物消费 - 肉类：碳排放量（千克）= 日均肉类消费量（千克）× 2</li>
+            </ul>
+            <p>家庭总碳排放量为以上各项碳排放量之和。</p>
+            <h3>企业碳足迹计算</h3>
+            <p>企业碳足迹计算涉及生产过程、能源消耗、原材料采购、产品运输等多个环节。计算公式如下：</p>
+            <ul>
+                <li>交通 - 汽车：碳排放量（千克）= 行驶里程（公里）× 0.2</li>
+                <li>交通 - 公共交通：碳排放量（千克）= 乘坐里程（公里）× 0.1</li>
+                <li>能源使用 - 电力：碳排放量（千克）= 日均用电量（度）× 0.5</li>
+                <li>能源使用 - 燃气：碳排放量（千克）= 日均用气量（立方米）× 0.3</li>
+                <li>生产过程：碳排放量（千克）= 日均生产量（单位）× 0.1</li>
+            </ul>
+            <p>企业总碳排放量为以上各项碳排放量之和。</p>
+        </div>
+    </div>
+    <!-- 关于我们模态框 -->
+    <div id="about-us-modal" class="modal">
+        <div class="modal-content">
+            <span class="close">&times;</span>
+            <h2>关于我们</h2>
+            <p>我们的团队: 碳足迹第四小组</p>
+            <p>队长: 梁光涛</p>
+            <p>队员: 李玉强 廖雯洁 强心雨 杨森宇</p>
+            <p>团队介绍:
+                团结和服务是我们最大的前提，信心和激情是我们最好的准备！只要我们是一支团结激情的团队，
+                就一定能直面考验，笑对人生。激情是美好的，因为它而快乐飞扬！团结是美好的，因为它而永久难忘；
+                服务是美好的，因为它而斗志昂扬；和谐是美好的，因为它而灿烂辉煌。
+            </p>
+            <p>服务、团结像是一个彩色的花环，让两者在我们中间跳跃，传递；
+                让我们心手相连，脚踏实地，团结进取，共建“团结、服务、和谐”；
+                让我们心手相连，奋勇拼搏，一路向前，共创灿烂辉煌！</p>
+        </div>
+    </div>
+    <!-- 碳足迹科普视频模态框 -->
+    <div id="carbon-video-modal" class="modal">
+        <div class="modal-content">
+            <span class="close">&times;</span>
+            <h2>碳足迹科普视频</h2>
+            <iframe id="carbon-video" src="https://player.bilibili.com/player.html?bvid=BV1HPSqYzEmG&page=1"
+                frameborder="0" allowfullscreen></iframe>
+        </div>
+    </div>
+
+    <!-- 主内容，默认隐藏 -->
+    <div id="main-content" class="hidden container mx-auto p-8">
+        <button id="back-button" class="back-button">返回</button>
+        <h2 class="text-3xl font-bold mb-4 text-white">计算你的碳足迹</h2>
+        <div class="bg-white p-6 rounded-lg shadow-md">
+            <!-- 切换计算类型的按钮 -->
+            <button class="type-button" data-type="personal">个人</button>
+            <button class="type-button" data-type="family">家庭</button>
+            <button class="type-button" data-type="enterprise">企业</button>
+            <button class="type-button" data-type="quick">普通计算</button>
+            <!-- 个人碳足迹计算表单 -->
+            <div id="personal" class="calculation-type">
+                <h3 class="text-xl font-bold mb-2">个人交通</h3>
+                <label for="personal-car-distance" class="block mb-1">汽车行驶里程（公里）:</label>
+                <input type="number" id="personal-car-distance"
+                    class="border border-gray-300 p-2 w-full rounded-md mb-2">
+                <label for="personal-public-transport-distance" class="block mb-1">公共交通行驶里程（公里）:</label>
+                <input type="number" id="personal-public-transport-distance"
+                    class="border border-gray-300 p-2 w-full rounded-md">
+                <h3 class="text-xl font-bold mb-2 mt-4">个人能源</h3>
+                <label for="personal-electricity-usage" class="block mb-1">每月用电量（度）:</label>
+                <input type="number" id="personal-electricity-usage"
+                    class="border border-gray-300 p-2 w-full rounded-md mb-2">
+                <label for="personal-gas-usage" class="block mb-1">每月用气量（立方米）:</label>
+                <input type="number" id="personal-gas-usage" class="border border-gray-300 p-2 w-full rounded-md">
+                <h3 class="text-xl font-bold mb-2 mt-4">个人食物</h3>
+                <label for="personal-meat-consumption" class="block mb-1">每周肉类消费量（千克）:</label>
+                <input type="number" id="personal-meat-consumption"
+                    class="border border-gray-300 p-2 w-full rounded-md">
+                <div class="calculation-actions">
+                    <button id="calculate-button-personal" class="bg-green-500 text-white p-2 rounded-md">计算碳足迹</button>
+                    <button id="personal-clear-button" class="bg-green-500 text-white p-2 rounded-md">清除历史数据</button>
+                    <span id="personal-record-count" class="record-count">当前记录数: 0/10</span>
+                    <div class="carbon-comparison-info">
+                        <p>国内个人日均碳足迹排放量: 约 21.92 千克二氧化碳当量</p>
+                        <p>全球个人日均碳足迹排放量: 约 18.63 千克二氧化碳当量</p>
+                    </div>
+                </div>
+            </div>
+            <!-- 家庭碳足迹计算表单 -->
+            <div id="family" class="calculation-type hidden">
+                <h3 class="text-xl font-bold mb-2">家庭交通</h3>
+                <label for="family-car-distance" class="block mb-1">家庭汽车行驶里程（公里）:</label>
+                <input type="number" id="family-car-distance" class="border border-gray-300 p-2 w-full rounded-md mb-2">
+                <label for="family-public-transport-distance" class="block mb-1">家庭公共交通行驶里程（公里）:</label>
+                <input type="number" id="family-public-transport-distance"
+                    class="border border-gray-300 p-2 w-full rounded-md">
+                <h3 class="text-xl font-bold mb-2 mt-4">家庭能源</h3>
+                <label for="family-electricity-usage" class="block mb-1">家庭每月用电量（度）:</label>
+                <input type="number" id="family-electricity-usage"
+                    class="border border-gray-300 p-2 w-full rounded-md mb-2">
+                <label for="family-gas-usage" class="block mb-1">家庭每月用气量（立方米）:</label>
+                <input type="number" id="family-gas-usage" class="border border-gray-300 p-2 w-full rounded-md">
+                <h3 class="text-xl font-bold mb-2 mt-4">家庭食物</h3>
+                <label for="family-meat-consumption" class="block mb-1">家庭每周肉类消费量（千克）:</label>
+                <input type="number" id="family-meat-consumption" class="border border-gray-300 p-2 w-full rounded-md">
+                <div class="calculation-actions">
+                    <button id="calculate-button-family" class="bg-green-500 text-white p-2 rounded-md">计算碳足迹</button>
+                    <button id="family-clear-button" class="bg-green-500 text-white p-2 rounded-md">清除历史数据</button>
+                    <span id="family-record-count" class="record-count">当前记录数: 0/10</span>
+                    <div class="carbon-comparison-info">
+                        <p>国内四口之家日均碳足迹排放量: 约 46.93 千克二氧化碳当量</p>
+                        <p>全球四口之家日均碳足迹排放量: 约 32.33 千克二氧化碳当量</p>
+                    </div>
+                </div>
+            </div>
+            <!-- 企业碳足迹计算表单 -->
+            <div id="enterprise" class="calculation-type hidden">
+                <h3 class="text-xl font-bold mb-2">企业交通</h3>
+                <label for="enterprise-car-distance" class="block mb-1">企业车辆行驶里程（公里）:</label>
+                <input type="number" id="enterprise-car-distance"
+                    class="border border-gray-300 p-2 w-full rounded-md mb-2">
+                <label for="enterprise-public-transport-distance" class="block mb-1">企业员工公共交通使用里程（公里）:</label>
+                <input type="number" id="enterprise-public-transport-distance"
+                    class="border border-gray-300 p-2 w-full rounded-md">
+                <h3 class="text-xl font-bold mb-2 mt-4">企业能源</h3>
+                <label for="enterprise-electricity-usage" class="block mb-1">企业每月用电量（度）:</label>
+                <input type="number" id="enterprise-electricity-usage"
+                    class="border border-gray-300 p-2 w-full rounded-md mb-2">
+                <label for="enterprise-gas-usage" class="block mb-1">企业每月用气量（立方米）:</label>
+                <input type="number" id="enterprise-gas-usage" class="border border-gray-300 p-2 w-full rounded-md">
+                <h3 class="text-xl font-bold mb-2 mt-4">企业生产</h3>
+                <label for="enterprise-production" class="block mb-1">企业每月生产量（单位）:</label>
+                <input type="number" id="enterprise-production" class="border border-gray-300 p-2 w-full rounded-md">
+                <div class="calculation-actions">
+                    <button id="calculate-button-enterprise"
+                        class="bg-green-500 text-white p-2 rounded-md">计算碳足迹</button>
+                    <button id="enterprise-clear-button" class="bg-green-500 text-white p-2 rounded-md">清除历史数据</button>
+                    <span id="enterprise-record-count" class="record-count">当前记录数: 0/10</span>
+                    <div class="carbon-comparison-info">
+                        <p>国内企业日均碳足迹排放量: 因行业而异</p>
+                        <p>全球企业日均碳足迹排放量: 因行业而异</p>
+                    </div>
+                </div>
+            </div>
+            <!-- 普通碳足迹计算表单 -->
+            <div id="quick" class="calculation-type hidden">
+                <h3 class="text-xl font-bold mb-2">普通碳足迹计算</h3>
+
+                <div class="mb-4">
+                    <label for="quick-type" class="block mb-1">碳足迹数据类型:</label>
+                    <select id="quick-type" class="border border-gray-300 p-2 w-full rounded-md mb-2">
+                        <option value="food">食品摄入</option>
+                        <option value="transport">交通里程</option>
+                        <option value="electricity">用电量</option>
+                        <option value="gas">用气量</option>
+                    </select>
+                </div>
+
+                <!-- 天数输入字段（默认隐藏，部分类型需要显示） -->
+                <div id="quick-days-container" class="mb-4">
+                    <label for="quick-days" class="block mb-1">天数:</label>
+                    <input type="number" id="quick-days" class="border border-gray-300 p-2 w-full rounded-md mb-2"
+                        min="1" value="1">
+                </div>
+
+
+                <!-- 动态输入字段容器 -->
+                <div id="quick-fields-container" class="mb-4">
+                    <!-- 食品摄入字段 -->
+                    <div id="quick-fields-food" class="quick-fields">
+                        <div class="grid grid-cols-1 md:grid-cols-2 gap-4">
+                            <div>
+                                <label for="quick-food-type" class="block mb-1">食品类型:</label>
+                                <select id="quick-food-type" class="border border-gray-300 p-2 w-full rounded-md mb-2">
+                                    <option value="meat">肉类</option>
+                                    <option value="dairy">乳制品</option>
+                                    <option value="grain">谷物</option>
+                                    <option value="vegetable">蔬菜</option>
+                                    <option value="fruit">水果</option>
+                                </select>
+                            </div>
+                            <div>
+                                <label for="quick-food-amount" class="block mb-1">每日摄入量 (kg):</label>
+                                <input type="number" id="quick-food-amount"
+                                    class="border border-gray-300 p-2 w-full rounded-md mb-2">
+                            </div>
+                        </div>
+                    </div>
+
+                    <!-- 交通里程字段 -->
+                    <div id="quick-fields-transport" class="quick-fields hidden">
+                        <div class="grid grid-cols-1 md:grid-cols-2 gap-4">
+                            <div>
+                                <label for="quick-transport-type" class="block mb-1">交通方式:</label>
+                                <select id="quick-transport-type"
+                                    class="border border-gray-300 p-2 w-full rounded-md mb-2">
+                                    <option value="car">汽车</option>
+                                    <option value="bus">公交车</option>
+                                    <option value="train">火车</option>
+                                    <option value="airplane">飞机</option>
+                                </select>
+                            </div>
+                            <div>
+                                <label for="quick-transport-distance" class="block mb-1">每日里程 (公里):</label>
+                                <input type="number" id="quick-transport-distance"
+                                    class="border border-gray-300 p-2 w-full rounded-md mb-2">
+                            </div>
+                        </div>
+                    </div>
+
+
+                    <!-- 用电量字段 -->
+                    <div id="quick-fields-electricity" class="quick-fields hidden">
+                        <select id="quick-electricity-mode" class="border border-gray-300 p-2 w-full rounded-md mb-2">
+                            <option value="daily">每日用电量 (度)</option>
+                            <option value="total">总用电量 (度)</option>
+                        </select>
+                        <div id="electricity-fields">
+                            <div id="electricity-daily" class="hidden">
+                                <label for="quick-electricity-daily-amount">每日用电量:</label>
+                                <input type="number" id="quick-electricity-daily-amount"
+                                    class="border border-gray-300 p-2 w-full rounded-md mb-2">
+                            </div>
+                            <div id="electricity-total">
+                                <label for="quick-electricity-total-amount">总用电量:</label>
+                                <input type="number" id="quick-electricity-total-amount"
+                                    class="border border-gray-300 p-2 w-full rounded-md mb-2">
+                            </div>
+                        </div>
+                    </div>
+
+                    <!-- 用气量字段 -->
+                    <div id="quick-fields-gas" class="quick-fields hidden">
+                        <select id="quick-gas-mode" class="border border-gray-300 p-2 w-full rounded-md mb-2">
+                            <option value="daily">每日用气量 (立方米)</option>
+                            <option value="total">总用气量 (立方米)</option>
+                        </select>
+                        <div id="gas-fields">
+                            <div id="gas-daily" class="hidden">
+                                <label for="quick-gas-daily-amount">每日用气量:</label>
+                                <input type="number" id="quick-gas-daily-amount"
+                                    class="border border-gray-300 p-2 w-full rounded-md mb-2">
+                            </div>
+                            <div id="gas-total">
+                                <label for="quick-gas-total-amount">总用气量:</label>
+                                <input type="number" id="quick-gas-total-amount"
+                                    class="border border-gray-300 p-2 w-full rounded-md mb-2">
+                            </div>
+                        </div>
+                    </div>
+                </div>
+
+
+                <button id="calculate-button-quick"
+                    class="bg-green-600 text-white px-4 py-2 rounded-lg hover:bg-green-700 transition-colors duration-300">
+                    计算碳排放量
+                </button>
+            </div>
+
+
+            <!-- 结果显示区域 -->
+            <div id="result" class="mt-6 bg-white p-6 rounded-lg shadow-md hidden">
+                <h3 class="text-xl font-bold mb-2">你的碳足迹结果</h3>
+                <p id="carbon-footprint-value"></p>
+                <h3 class="text-xl font-bold mb-2 mt-4">意见反馈</h3>
+                <p id="feedback-message"></p>
+            </div>
+
+            <!--普通计算结果显示区域-->
+            <div id="normal-calculation-result" class="mt-4 hidden">
+                <div class="border border-gray-300 p-4 rounded-md">
+                    <p id="normal-carbon-footprint-value" class="text-lg font-medium mb-2"></p>
+                    <p id="normal-feedback-message" class="text-gray-600"></p>
+                </div>
+            </div>
+
+            <!-- 引入JavaScript入口文件 -->
+            <script type="module" src="js/app.js"></script>
+
+            <!-- 引入扣子SDK -->
+            <script
+                src="https://lf-cdn.coze.cn/obj/unpkg/flow-platform/chat-app-sdk/1.2.0-beta.10/libs/cn/index.js"></script>
+
+            <!-- 初始化聊天组件 -->
+            <script>
+                // 等待页面加载完成后初始化
+                document.addEventListener('DOMContentLoaded', function () {
+                    // 创建聊天组件实例
+                    const chatClient = new CozeWebSDK.WebChatClient({
+                        config: {
+                            bot_id: '7513958127394439179', // 您的Bot ID
+                        },
+                        componentProps: {
+                            title: '碳足迹科普助手', // 修改为您的智能体名称
+                            theme: {
+                                primaryColor: '#00C851', // 主色调：绿色
+                                secondaryColor: '#03A9F4', // 辅助色：蓝色
+                            },
+                            logo: '/assets/Log.jpg', // 自定义Logo（替换为您的图标URL）
+                            welcomeMessage: '你好！我是碳足迹科普助手，有什么可以帮助你的？', // 欢迎语
+                        },
+                        auth: {
+                            type: 'token',
+                            token: 'pat_WivDYCifN6aNMOHg6situhNiH6o4mO93VWvNL62lAF5J3dfxc4hE41tCiMjrpIn4', // 替换为您的实际Token
+                            onRefreshToken: function () {
+                                return 'pat_WivDYCifN6aNMOHg6situhNiH6o4mO93VWvNL62lAF5J3dfxc4hE41tCiMjrpIn4'; // 刷新Token的回调函数
+                            }
+                        }
+                    });
+
+                    // 可选：将聊天组件挂载到指定元素
+                    // chatClient.mount('#coze-chat-container');
+                });
+            </script>
+</body>
+
+</html>

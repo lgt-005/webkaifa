@@ -1,0 +1,328 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>操作日志</title>
+    <!-- 引入 Chart.js 库 -->
+    <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
+    <style>
+        table {
+            width: 100%;
+            border-collapse: collapse;
+        }
+
+        th,
+        td {
+            border: 1px solid #ddd;
+            padding: 8px;
+            text-align: left;
+        }
+
+        /* 让图表容器可拖动调整大小 */
+        #chart-container {
+            resize: both;
+            overflow: auto;
+            border: 1px solid #ccc;
+            padding: 10px;
+            margin: 20px auto;
+            width: 800px;
+            /* 设置初始宽度 */
+            height: 400px;
+            /* 设置初始高度 */
+            max-width: 100%;
+            min-width: 300px;
+            min-height: 200px;
+        }
+
+        #toggle-table {
+            margin-bottom: 10px;
+        }
+
+        #table-container {
+            display: none;
+        }
+
+        canvas {
+            width: 100%;
+            height: 100%;
+        }
+        
+        button {
+            padding: 8px 16px;
+            margin: 5px;
+            background-color: #4CAF50;
+            color: white;
+            border: none;
+            border-radius: 4px;
+            cursor: pointer;
+        }
+        
+        button:hover {
+            background-color: #45a049;
+        }
+        
+        #clear-all-logs {
+            background-color: #f44336;
+        }
+        
+        #clear-all-logs:hover {
+            background-color: #d32f2f;
+        }
+    </style>
+</head>
+
+<body>
+    <h1>操作日志</h1>
+    <button id="toggle-table">展开/收起历史数据表格</button>
+    <button id="clear-all-logs">清除所有历史记录</button>
+    <div id="table-container">
+        <table id="log-table">
+            <thead>
+                <tr>
+                    <th>计算类型</th>
+                    <th>计算时间</th>
+                    <th>输入数据</th>
+                    <th>碳足迹</th>
+                </tr>
+            </thead>
+            <tbody></tbody>
+        </table>
+    </div>
+    <!-- 图表容器 -->
+    <div id="chart-container">
+        <!-- 绘制折线图的画布 -->
+        <canvas id="carbon-footprint-chart"></canvas>
+    </div>
+    <!-- 勾选框容器 -->
+    <div id="checkbox-container">
+        <label>
+            <input type="checkbox" id="personal-checkbox" checked> 个人碳足迹
+        </label>
+        <label>
+            <input type="checkbox" id="family-checkbox" checked> 家庭碳足迹
+        </label>
+        <label>
+            <input type="checkbox" id="enterprise-checkbox" checked> 企业碳足迹
+        </label>
+    </div>
+
+    <script>
+        // 从本地存储中获取操作日志
+        const logs = JSON.parse(localStorage.getItem('carbon_footprint_logs')) || [];
+        const tableBody = document.querySelector('#log-table tbody');
+        const chartCanvas = document.getElementById('carbon-footprint-chart');
+        const ctx = chartCanvas.getContext('2d');
+        const toggleTableButton = document.getElementById('toggle-table');
+        const tableContainer = document.getElementById('table-container');
+        const personalCheckbox = document.getElementById('personal-checkbox');
+        const familyCheckbox = document.getElementById('family-checkbox');
+        const enterpriseCheckbox = document.getElementById('enterprise-checkbox');
+        const clearAllLogsButton = document.getElementById('clear-all-logs');
+
+        // 按类别分类统计碳足迹数据
+        const personalData = [];
+        const familyData = [];
+        const enterpriseData = [];
+        const personalTimestamps = [];
+        const familyTimestamps = [];
+        const enterpriseTimestamps = [];
+
+        // 分别收集各类别的最新10条记录
+        const personalLogs = logs.filter(log => log.type === '个人').slice(-10);
+        const familyLogs = logs.filter(log => log.type === '家庭').slice(-10);
+        const enterpriseLogs = logs.filter(log => log.type === '企业').slice(-10);
+
+        // 处理个人日志
+        personalLogs.forEach(log => {
+            personalData.push(parseFloat(log.carbonFootprint));
+            personalTimestamps.push(log.timestamp || `记录 ${personalData.length}`);
+        });
+
+        // 处理家庭日志
+        familyLogs.forEach(log => {
+            familyData.push(parseFloat(log.carbonFootprint));
+            familyTimestamps.push(log.timestamp || `记录 ${familyData.length}`);
+        });
+
+        // 处理企业日志
+        enterpriseLogs.forEach(log => {
+            enterpriseData.push(parseFloat(log.carbonFootprint));
+            enterpriseTimestamps.push(log.timestamp || `记录 ${enterpriseData.length}`);
+        });
+
+        // 渲染操作日志表格
+        logs.forEach(log => {
+            const row = document.createElement('tr');
+            
+            const typeCell = document.createElement('td');
+            typeCell.textContent = log.type;
+            
+            const timestampCell = document.createElement('td');
+            timestampCell.textContent = log.timestamp || '未知时间';
+            
+            const inputDataCell = document.createElement('td');
+            // 美化输入数据显示
+            try {
+                const formattedData = JSON.stringify(log.inputData, null, 2);
+                inputDataCell.textContent = formattedData;
+            } catch (e) {
+                inputDataCell.textContent = JSON.stringify(log.inputData);
+            }
+            
+            const carbonFootprintCell = document.createElement('td');
+            carbonFootprintCell.textContent = log.carbonFootprint;
+            
+            row.appendChild(typeCell);
+            row.appendChild(timestampCell);
+            row.appendChild(inputDataCell);
+            row.appendChild(carbonFootprintCell);
+            tableBody.appendChild(row);
+        });
+
+        // 找出所有时间戳并去重排序
+        const allTimestamps = [...personalTimestamps, ...familyTimestamps, ...enterpriseTimestamps]
+            .filter((v, i, a) => a.indexOf(v) === i)
+            .sort();
+
+        // 生成 X 轴标签（使用时间戳）
+        const labels = allTimestamps.length > 0 ? allTimestamps : ['无数据'];
+
+        // 配置折线图数据
+        const data = {
+            labels: labels,
+            datasets: [
+                {
+                    label: '个人碳足迹',
+                    data: personalTimestamps.map(timestamp => {
+                        const index = personalTimestamps.indexOf(timestamp);
+                        return index !== -1 ? personalData[index] : null;
+                    }),
+                    borderColor: 'rgb(75, 192, 192)',
+                    backgroundColor: 'rgba(75, 192, 192, 0.5)',
+                    fill: true,
+                    hidden: false
+                },
+                {
+                    label: '家庭碳足迹',
+                    data: familyTimestamps.map(timestamp => {
+                        const index = familyTimestamps.indexOf(timestamp);
+                        return index !== -1 ? familyData[index] : null;
+                    }),
+                    borderColor: 'rgb(54, 162, 235)',
+                    backgroundColor: 'rgba(54, 162, 235, 0.5)',
+                    fill: true,
+                    hidden: false
+                },
+                {
+                    label: '企业碳足迹',
+                    data: enterpriseTimestamps.map(timestamp => {
+                        const index = enterpriseTimestamps.indexOf(timestamp);
+                        return index !== -1 ? enterpriseData[index] : null;
+                    }),
+                    borderColor: 'rgb(255, 99, 132)',
+                    backgroundColor: 'rgba(255, 99, 132, 0.5)',
+                    fill: true,
+                    hidden: false
+                }
+            ]
+        };
+
+        // 配置折线图选项
+        const config = {
+            type: 'line',
+            data: data,
+            options: {
+                responsive: true,
+                maintainAspectRatio: false,
+                title: {
+                    display: true,
+                    text: '不同类型碳足迹历史数据趋势图'
+                },
+                scales: {
+                    x: {
+                        title: {
+                            display: true,
+                            text: '计算时间'
+                        },
+                        ticks: {
+                            autoSkip: true,
+                            maxRotation: 45,
+                            minRotation: 45
+                        }
+                    },
+                    y: {
+                        title: {
+                            display: true,
+                            text: '碳足迹（千克二氧化碳当量）'
+                        }
+                    }
+                },
+                plugins: {
+                    tooltip: {
+                        mode: 'index',
+                        intersect: false
+                    },
+                    legend: {
+                        position: 'top',
+                    }
+                }
+            }
+        };
+
+        // 创建折线图
+        const myChart = new Chart(ctx, config);
+
+        // 切换表格显示状态
+        toggleTableButton.addEventListener('click', () => {
+            if (tableContainer.style.display === 'none') {
+                tableContainer.style.display = 'block';
+            } else {
+                tableContainer.style.display = 'none';
+            }
+        });
+
+        // 处理勾选框事件
+        function updateChartVisibility() {
+            const personalVisible = personalCheckbox.checked;
+            const familyVisible = familyCheckbox.checked;
+            const enterpriseVisible = enterpriseCheckbox.checked;
+
+            myChart.data.datasets[0].hidden = !personalVisible;
+            myChart.data.datasets[1].hidden = !familyVisible;
+            myChart.data.datasets[2].hidden = !enterpriseVisible;
+
+            myChart.update();
+        }
+
+        personalCheckbox.addEventListener('change', updateChartVisibility);
+        familyCheckbox.addEventListener('change', updateChartVisibility);
+        enterpriseCheckbox.addEventListener('change', updateChartVisibility);
+
+        // 监听容器大小变化，更新图表
+        const chartContainer = document.getElementById('chart-container');
+        const resizeObserver = new ResizeObserver(() => {
+            myChart.resize();
+        });
+        resizeObserver.observe(chartContainer);
+
+        // 清除所有历史记录
+        clearAllLogsButton.addEventListener('click', () => {
+            if (confirm('确定要清除所有历史记录吗？此操作不可恢复。')) {
+                localStorage.removeItem('operationLogs');
+                alert('所有历史记录已清除');
+                // 清空表格
+                tableBody.innerHTML = '';
+                // 清空图表数据
+                myChart.data.datasets.forEach(dataset => {
+                    dataset.data = [];
+                });
+                myChart.data.labels = ['无数据'];
+                myChart.update();
+            }
+        });
+    </script>
+</body>
+
+</html>
