@@ -1,0 +1,270 @@
+body {
+    background-image: url(../assets/start.jpg);
+    background-size: cover;
+    background-repeat: no-repeat;
+    background-attachment: fixed;
+}
+
+/* 模态框样式 */
+.modal {
+    display: none;
+    position: fixed;
+    z-index: 1;
+    left: 0;
+    top: 0;
+    width: 100%;
+    height: 100%;
+    overflow: auto;
+    background-color: rgba(0, 0, 0, 0.4);
+}
+
+.modal-content {
+    /* 调整为贴合背景的浅色调，增加透明度 */
+    background-color: rgba(255, 255, 255, 0.9); 
+    background-color: #fefefe;
+    margin: 15% auto;
+    padding: 20px;
+    border: 1px solid #888;
+    width: 80%;
+    max-width: 600px;
+    border-radius: 0.5rem;
+    /* 添加圆角 */
+}
+
+.close {
+    color: #aaa;
+    float: right;
+    font-size: 28px;
+    font-weight: bold;
+}
+
+.close:hover,
+.close:focus {
+    color: black;
+    text-decoration: none;
+    cursor: pointer;
+}
+
+/* 开始页面样式 */
+.start-page {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    justify-content: center;
+    height: 100vh;
+    position: relative;
+}
+
+.start-page button {
+    margin: 10px;
+    padding: 10px 20px;
+    font-size: 18px;
+    /* background-color: #228B22; */
+    /* 调整为背景图中的青绿色系 */
+    background-color: #00bfa5; 
+    color: white;
+    border: none;
+    border-radius: 5px;
+    cursor: pointer;
+    transition: background-color 0.3s ease;
+}
+
+.start-page button:hover {
+    /* background-color: #006400; */
+    /* 加深 hover 颜色 */
+    background-color: #00897b; 
+}
+
+/* 返回按钮样式 */
+.back-button {
+    position: fixed;
+    top: 20px;
+    left: 20px;
+    padding: 10px 20px;
+    /* background-color: #228B22; */
+    /* 同开始页面按钮主色 */
+    background-color: #00bfa5;
+    color: white;
+    border: none;
+    border-radius: 5px;
+    cursor: pointer;
+    transition: background-color 0.3s ease;
+}
+
+.back-button:hover {
+    /* background-color: #006400; */
+    /* 加深 hover 颜色 */
+    background-color: #00897b; 
+}
+
+/* 切换计算类型的按钮样式 */
+.type-button {
+    padding: 10px 20px;
+    /* background-color: #228B22; */
+    /* 加深 hover 颜色 */
+    background-color: #00897b; 
+    color: white;
+    border: none;
+    border-radius: 5px;
+    cursor: pointer;
+    transition: background-color 0.3s ease;
+    margin: 5px;
+}
+
+.type-button:hover {
+    /* background-color: #006400; */
+    /* 加深 hover 颜色 */
+    background-color: #00897b; 
+}
+
+/* 新增LOGO样式 */
+        .logo {
+            height: 45px; /* 调整LOGO高度 */
+            margin-right: auto; /* 将右侧空间全部占据，推挤按钮组到最右侧 */
+            padding-left: 10px; /* 新增：左侧间距 */
+            vertical-align: middle; /* 垂直居中 */
+        }
+        
+        /* 调整菜单栏布局 */
+        .menu-bar {
+            align-items: center; /* 垂直居中 */
+        }
+
+/* 菜单栏样式 */
+.menu-bar {
+    position: absolute;
+    top: 20px;
+    right: 20px;
+    display: flex;
+    /*background-color: rgba(0, 0, 0, 0.7);  添加半透明背景，增强可读性 */
+    /* 调整为半透明深色，与背景融合更好 */
+    background-color: rgba(0, 0, 0, 0.5);
+}
+
+.menu-bar button {
+    margin-left: 10px;
+    padding: 8px 16px;
+    /* background-color: #228B22; */
+    /* 同开始页面按钮主色 */
+    background-color: #00bfa5; 
+    color: white;
+    border: none;
+    border-radius: 5px;
+    cursor: pointer;
+    transition: background-color 0.3s ease;
+}
+
+.menu-bar button:hover {
+    /* background-color: #006400; */
+    /* 加深 hover 颜色 */
+    background-color: #00897b;
+}
+
+/* 下拉菜单样式 */
+.dropdown {
+    position: relative;
+    display: inline-block;
+}
+
+.dropdown-content {
+    display: none;
+    position: absolute;
+    /* background-color: #f9f9f9; */
+    /* 调整下拉菜单背景色，增加透明度 */
+    background-color: rgba(255, 255, 255, 0.9); 
+    min-width: 160px;
+    box-shadow: 0px 8px 16px 0px rgba(0, 0, 0, 0.2);
+    z-index: 1;
+}
+
+.dropdown-content a {
+    color: black;
+    padding: 12px 16px;
+    text-decoration: none;
+    display: block;
+}
+
+.dropdown-content a:hover {
+    background-color: #f1f1f1;
+}
+
+.dropdown:hover .dropdown-content {
+    display: block;
+}
+
+/* 碳足迹科普视频窗口大小*/
+iframe {
+    width: 100%;
+    height: 360px;
+    /* 可按需调整高度 */
+}
+
+/* 数据记录提示词的颜色*/
+.record-count {
+    color: black;
+    margin-left: 10px;
+    /* 可以根据需要调整与按钮的间距 */
+}
+
+/* 包裹按钮和信息展示区的容器样式 */
+.calculation-actions {
+    display: flex;
+    flex-wrap: wrap;
+    justify-content: space-between;
+    align-items: center;
+    margin-top: 10px;
+}
+
+/* 按钮样式，统一按钮外观和间距 */
+.calculation-actions button {
+    /* background-color: #228B22; */
+    /* 同开始页面按钮主色 */
+    background-color: #00bfa5; 
+    color: white;
+    border: none;
+    border-radius: 5px;
+    padding: 10px 20px;
+    margin-bottom: 10px;
+    cursor: pointer;
+    transition: background-color 0.3s ease;
+}
+
+.calculation-actions button:hover {
+    /* background-color: #006400; */
+     /* 加深 hover 颜色 */
+    background-color: #00897b; 
+}
+
+/* 信息展示区样式 */
+.carbon-comparison-info {
+    background-color: rgba(255, 255, 255, 0.8);
+    padding: 10px;
+    border-radius: 5px;
+    font-size: 14px;
+    max-width: 50%;
+    /* 限制信息展示区最大宽度 */
+
+}
+
+/* 隐藏元素类 */
+.hidden {
+    display: none;
+}
+
+/* 下拉菜单响应式调整 */
+@media (max-width: 768px) {
+    .menu-bar {
+        flex-direction: column;
+        top: 10px;
+        right: 10px;
+    }
+
+    .menu-bar button {
+        margin-left: 0;
+        margin-bottom: 10px;
+    }
+
+    .dropdown-content {
+        right: 0;
+    }
+}
